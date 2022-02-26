@@ -10,18 +10,18 @@ async fn main() -> WebhookResult<()> {
         .text()
         .await?;
 
-    let url;
-    match env::var("discord") {
-        Ok(val) => url = val,
-        Err(err) => {
-            eprintln!("Erorr: {:?}", err);
-            process::exit(1);
-        },
-    }    
-
-    let client = WebhookClient::new(&url);
-
     if response != "Baza jest aktualnie pusta" {
+        let url;
+        match env::var("discord") {
+            Ok(val) => url = val,
+            Err(err) => {
+                eprintln!("Erorr: {:?}", err);
+                process::exit(1);
+            },
+        }
+
+        let client = WebhookClient::new(&url);
+
         client.send(|message| message
             .content("@everyone Nowy serwer dostępny w recyklingu")
             .username("mikrus_recykling")
