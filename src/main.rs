@@ -22,10 +22,17 @@ async fn main() -> WebhookResult<()> {
 
         let client = WebhookClient::new(&url);
 
-        client.send(|message| message
+        if response.contains("3.0") {
+            client.send(|message| message
             .content(format!("@everyone Nowy serwer dostępny w recyklingu\n{}", response).as_str())
             .username("mikrus_recykling")
             .avatar_url("https://www.wykop.pl/cdn/c3201142/comment_pMhcEOCLm7cv7OaJ6IHjqkHE72jpX2nw.jpg")).await?;
+        } else {
+            client.send(|message| message
+                .content(format!("Nowy serwer dostępny w recyklingu\n{}", response).as_str())
+                .username("mikrus_recykling")
+                .avatar_url("https://www.wykop.pl/cdn/c3201142/comment_pMhcEOCLm7cv7OaJ6IHjqkHE72jpX2nw.jpg")).await?;
+        }
     }
 
     Ok(())
