@@ -5,6 +5,11 @@ ADD . /app
 RUN cargo build --release
 
 FROM debian:bullseye-slim as worker
-RUN apt-get update && apt-get install ca-certificates -y && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install cron ca-certificates -y && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /app/target/release/mikrus_recycling /
-CMD ["./mikrus_recycling"]
+COPY cronjob /etc/cron.d/mikrus
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod 0644 /etc/cron.d/mikrus
+RUN crontab /etc/cron.d/mikrus
+RUN touch /var/log/cron.log
+ENTRYPOINT [ "sh", "/entrypoint.sh" ]
